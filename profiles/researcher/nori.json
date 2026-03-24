@@ -1,0 +1,6 @@
+{
+  "name": "researcher",
+  "version": "0.1.0",
+  "type": "skillset",
+  "description": "Research-first workflow for data science, academic, and exploratory projects. Extends the amol/SWE profile with session continuity, epistemic framing, and adaptive pipelines that don't force every session to end with a PR."
+}
