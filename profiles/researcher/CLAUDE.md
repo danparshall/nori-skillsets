@@ -6,13 +6,20 @@
 - **Personal context check (first session only):** Look for personal context *above* the managed block in the agent's instructions file (name, background, domain expertise). If absent or minimal, ask the user:
   > "I work best when I know your background. Could you tell me: (1) your name and role, (2) your research domain, and (3) anything about how you think or work that I should know? I'll save this above the managed block so future sessions have it too."
   Write their response as a short paragraph above the `# BEGIN NORI-AI MANAGED BLOCK` marker. This only needs to happen once — the content persists across profile switches.
+- **Research structure check (first session per repo):** Verify the repo has the expected documentation structure. Check for: README.md, STATUS.md, papers/ directory, docs/active/ directory. If the core structure is missing, ask:
+  > "This repo doesn't have the research doc structure yet. Want me to scaffold it? (If this is purely a code repo, the amol/SWE profile might be a better fit.)"
+  If yes, create: README.md, STATUS.md, papers/ (with .gitkeep), papers/text/ (with .gitkeep), docs/active/, docs/historical/. See the "Documentation Stack" section below for what each file is.
+- **Pre-flight reads (every session):**
+  1. Read **STATUS.md** — what we've been doing lately, status of active branches, details for this branch
+  2. Read **README.md** — what this repo does, overview of historical branches
+  3. Read **docs/active/\<branch\>/RESEARCH_LOG.md** if it exists — index for this branch's convos and plans
+  Do NOT skip these even if the user gives a specific task. You start each session with zero memory — these files are how you catch up.
 - Determine the branch:
   - The user's opening message should name a branch (e.g., "working on `reasoning-format-experiment`")
   - If a branch is named: switch to it (check for existing worktree first, create one with data/ symlink only if needed)
   - If no branch is named: **ASK** — "Which branch should we work on?" Do NOT assume main or create a new worktree unprompted.
   - If on main and user wants a NEW research line: Read and follow `{{skills_dir}}/use-worktree/SKILL.md`. Create `docs/active/branch-name/` with RESEARCH_LOG.md + convos/ + plans/ + results/ subdirs.
 - **Propose a convo name** based on the user's opening message (e.g., `20260314_d_axis_stability_analysis`). Present it for approval — user hits enter to accept or edits. This becomes the session's convo filename.
-- Read `docs/active/branch-name/RESEARCH_LOG.md` if it exists, to understand the trajectory of this research line.
 - Search for relevant skills using Glob/Grep in `{{skills_dir}}/`
 - Do the work. This is a research-first profile — no forced pipeline. Adapt to what the session needs:
   - **Research/exploration:** Read papers, analyze data, discuss hypotheses, run experiments. No forced plan or TDD.
@@ -32,6 +39,39 @@
 - Finish-convo should push after committing (unless the user says otherwise).
 </required>
 
+# Documentation Stack
+
+This profile expects a specific documentation structure. Each file has a defined role — don't duplicate information across files.
+
+## Repo-level files (stable across branches)
+
+| File | Role | When to read |
+|------|------|-------------|
+| **CLAUDE.md** | Agent instructions for this repo. How to work here, not what we're building. Points to the other files. | Every session start |
+| **README.md** | What this repo does. Couple sentences per historical branch. The global "why." | Every session start |
+| **STATUS.md** | What we've been doing lately. Couple-sentence summary of each active branch, detailed status for the current branch. | Every session start, every branch switch |
+| **papers/** | Raw PDFs of source literature. | On demand |
+| **papers/text/** | Extracted text from PDFs, so you can search and discuss fine details without parsing PDFs. | On demand, when summaries aren't enough |
+
+## Branch-level files (per research line)
+
+| File | Role | When to read |
+|------|------|-------------|
+| **docs/active/\<branch\>/RESEARCH_LOG.md** | The index for this branch. Tracks which convos tied to which plans, session history, trajectory of thinking. Newest entries first. | Every session start |
+| **docs/active/\<branch\>/convos/** | Conversation summaries. One file per session, named `YYYYMMDD_topic.md`. | On demand, when you need to understand why a decision was made |
+| **docs/active/\<branch\>/plans/** | Implementation plans. Each MUST point back to the originating convo so you can check the reasoning if needed. | When implementing something |
+| **docs/active/\<branch\>/results/** | Analysis outputs, figures, data summaries produced during research. | On demand |
+
+## Lifecycle: active → historical
+
+When a research line is complete and its branch is merged:
+1. `git mv docs/active/<branch> docs/historical/<branch>`
+2. Add an entry to the "Archived Research Lines" table in STATUS.md (branch name, date archived, one-line summary of what was learned)
+
+Historical docs are **never deleted** — they're always recoverable when you need to revisit prior reasoning. But they're not loaded into session context by default. The STATUS.md table tells agents what's in historical/ and why, so they know it exists without reading it.
+
+Skip `docs/historical/` unless the user specifically asks to revisit an archived research line.
+
 # Research Context
 
 This profile is for research work. Findings in docs are provisional — evidence accumulates gradually, and today's best understanding may shift tomorrow.
@@ -39,8 +79,6 @@ This profile is for research work. Findings in docs are provisional — evidence
 **When the user says "the data showed X, let's pivot," TRUST THEM** — they have seen results you haven't. Your job is to help explore the new direction, not defend old hypotheses.
 
 Do NOT treat any prior doc as settled truth. Read RESEARCH_LOG.md to understand the trajectory of thinking, not just the latest conclusion.
-
-Skip `docs/historical/` unless specifically asked to revisit an archived research line. The "Archived Research Lines" table in STATUS.md tells you what's there and why it was archived.
 
 # Tone and Intellectual Honesty
 
