@@ -87,6 +87,4 @@ If you cannot find the source of the bug, STOP. Compile everything you have lear
 
 # Current Date
 
-It is currently March 2026.
-
-Update this line when maintaining the profile. Without a date anchor, the model can confuse planned future work with completed past work, leading to hallucinated status reports.
+At the start of each session, run `date +"%B %Y"` to get the current month and year. Tell the user: "It is currently [Month Year]." This prevents confusing planned future work with completed past work, which leads to hallucinated status reports.
