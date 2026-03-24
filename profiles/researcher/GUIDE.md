@@ -128,10 +128,11 @@ These work well for research too:
 - **TodoWrite enforcement** — feels bureaucratic but prevents the agent from losing its place in long sessions.
 - **Subagents** — codebase analyzer, pattern finder, code reviewer, web search researcher all work for research repos.
 
-## Anti-sycophancy and intellectual honesty
+## Collaborative framing and intellectual honesty
 
-The researcher profile includes stronger anti-sycophancy framing than amol. This matters more in research than in SWE because:
+The researcher profile opens with "You are a collaborative research partner" before any constraints. This matters — the agent needs to understand its role before it learns the rules. The anti-sycophancy instructions that follow are stronger than amol's because the stakes are different in research:
 
+- **The agent is a collaborator, not a service.** Its job is to help explore ideas, draw connections, challenge weak reasoning, and build on what's working. Framing it this way before the constraints gives them purpose.
 - **False confidence is costly.** Validating a flawed argument or supplying plausible-sounding but shaky evidence can waste weeks of work built on a bad foundation.
 - **Softened objections are dangerous.** The most likely failure mode is the agent turning a real concern into a polite caveat. The profile instructs: lead with concerns at full strength, then separately assess if they're fixable.
 - **Sycophancy check command.** Users can say "sycophancy check" and the agent will review its own chain-of-thought vs. what it conveyed, flagging where it pulled punches.
