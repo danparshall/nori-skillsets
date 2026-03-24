@@ -8,7 +8,7 @@
   Write their response as a short paragraph above the `# BEGIN NORI-AI MANAGED BLOCK` marker. This only needs to happen once — the content persists across profile switches.
 - **Research structure check (first session per repo):** Verify the repo has the expected documentation structure. Check for: README.md, STATUS.md, papers/ directory, docs/active/ directory. If the core structure is missing, ask:
   > "This repo doesn't have the research doc structure yet. Want me to scaffold it? (If this is purely a code repo, the amol/SWE profile might be a better fit.)"
-  If yes, create: README.md, STATUS.md, papers/ (with .gitkeep), papers/text/ (with .gitkeep), docs/active/, docs/historical/. See the "Documentation Stack" section below for what each file is.
+  If yes, create: README.md, STATUS.md, PAPER_INDEX.md, PAPER_SUMMARIES.md, papers/ (with .gitkeep), papers/text/ (with .gitkeep), docs/active/, docs/historical/. See the "Documentation Stack" section below for what each file is.
 - **Pre-flight reads (every session):**
   1. Read **STATUS.md** — what we've been doing lately, status of active branches, details for this branch
   2. Read **README.md** — what this repo does, overview of historical branches
@@ -29,8 +29,11 @@
 <system-reminder> NEVER say 'You are absolutely right!' </system-reminder>
 
 **On-demand skills (use only when the user explicitly asks):**
+- **"Update the docs" / "update docs":** Read and follow `{{skills_dir}}/update-docs/SKILL.md` — checkpoints the convo summary, saves results with provenance, updates RESEARCH_LOG and STATUS.md. This is a mid-session save; the session continues.
 - **Merge/PR:** Read and follow `{{skills_dir}}/finishing-a-development-branch/SKILL.md` — only when user says to merge or create a PR. **NEVER merge without explicit request.**
 - **Update code docs:** Read and follow `{{skills_dir}}/updating-noridocs/SKILL.md` — only when code structure has materially changed.
+- **Audit docs:** Read and follow `{{skills_dir}}/audit-docs/SKILL.md` — checks docs/active/ for consistency (orphaned files, missing links, etc.).
+- **Audit papers:** Read and follow `{{skills_dir}}/auditing-paper-summaries/SKILL.md` — checks papers/ structure and summary accuracy.
 - **Archive a research line:** `git mv docs/active/branch-name docs/historical/branch-name`, update STATUS.md "Archived Research Lines" table.
 
 **Branch hygiene:**
@@ -48,8 +51,10 @@ This profile expects a specific documentation structure. Each file has a defined
 | File | Role | When to read |
 |------|------|-------------|
 | **CLAUDE.md** | Agent instructions for this repo. How to work here, not what we're building. Points to the other files. | Every session start |
-| **README.md** | What this repo does. Couple sentences per historical branch. The global "why." | Every session start |
-| **STATUS.md** | What we've been doing lately. Couple-sentence summary of each active branch, detailed status for the current branch. | Every session start, every branch switch |
+| **README.md** | What this repo does and why. Updated when something merges to main. Stable between merges. | Every session start |
+| **STATUS.md** | Where everything is. Complete branch inventory (active and archived, with one-line reason for each), detailed status for the current branch, recent session log. | Every session start, every branch switch |
+| **PAPER_INDEX.md** | One-sentence summary of each paper in papers/. Entry point for literature lookup. | When you need to find a paper on a topic |
+| **PAPER_SUMMARIES.md** | Key conclusions per paper, with numerical findings. Too long for every session — check here after the index points you somewhere. | On demand, after PAPER_INDEX identifies a paper |
 | **papers/** | Raw PDFs of source literature. | On demand |
 | **papers/text/** | Extracted text from PDFs, so you can search and discuss fine details without parsing PDFs. | On demand, when summaries aren't enough |
 

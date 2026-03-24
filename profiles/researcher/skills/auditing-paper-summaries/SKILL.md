@@ -1,26 +1,48 @@
 ---
-name: auditing-paper-summaries
-description: Use when you need to verify PAPER_SUMMARIES.md entries against source papers for factual accuracy, missing numerical findings, and formatting consistency. Run the format audit script first, then use LLM verification on flagged entries or a specified subset. Can scope to recent additions, a specific section, or full audit.
+name: Audit-Papers
+description: Check papers/ structure for completeness and accuracy — every PDF has text extraction, every paper is indexed in PAPER_INDEX.md and summarized in PAPER_SUMMARIES.md, summaries are factually accurate. Prompts the user for discrepancies.
 ---
 
 <required>
 CRITICAL: Add the following steps to your Todo list using TodoWrite:
 
-1. Run format audit script to identify gaps
-2. Determine scope (full audit, recent additions, or specific entries)
-3. For each entry in scope, read the paper and verify the summary
-4. Fix factual errors, add missing numerical findings
-5. Fix formatting issues flagged by the script
-6. Report results
+1. Check papers/ structure: every PDF has a text extraction, every paper is indexed
+2. Run format audit script to identify summary gaps
+3. Determine scope (full audit, recent additions, or specific entries)
+4. For each entry in scope, read the paper and verify the summary
+5. Fix factual errors, add missing numerical findings
+6. Fix formatting issues flagged by the script
+7. Report results and prompt user for any structural fixes
 </required>
 
-# Auditing Paper Summaries
+# Auditing Papers
 
-Verifies that PAPER_SUMMARIES.md entries accurately represent their source papers, with particular focus on numerical findings and core results.
+Checks the papers/ structure for completeness, then verifies that summaries accurately represent their source papers.
 
-Announce at start: "I'm using the Auditing Paper Summaries skill to verify summary accuracy."
+Announce at start: "I'm using the Audit Papers skill to check the papers structure and verify summary accuracy."
 
 ## The Process
+
+### Step 0: Check Papers Structure
+
+Before auditing content, check structural completeness:
+
+- [ ] Every PDF in `papers/` has a corresponding `.txt` in `papers/text/`
+- [ ] Every paper in `papers/` has a one-line entry in `PAPER_INDEX.md`
+- [ ] Every paper in `PAPER_INDEX.md` has a full entry in `PAPER_SUMMARIES.md`
+- [ ] No phantom entries (indexed in PAPER_INDEX but PDF missing)
+
+**Report structural issues first and prompt the user:**
+```
+Found 3 structural issues:
+- papers/Smith_2025_deployment.pdf has no text extraction in papers/text/
+- papers/Jones_2024_scaling.pdf is not in PAPER_INDEX.md
+- PAPER_INDEX.md lists "Chen 2025" but no PDF exists
+
+Want me to fix these? (I can extract text and add index entries, but missing PDFs need to be downloaded.)
+```
+
+Fix only what the user approves. Then proceed to content audit.
 
 ### Step 1: Run Format Audit Script
 

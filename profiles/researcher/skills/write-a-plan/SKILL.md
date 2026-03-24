@@ -7,7 +7,9 @@ description: Use when a research conversation has produced something ready to im
 *CRITICAL* Add the following steps to your Todo list using TodoWrite:
 
 - Read the 'Guidelines'.
-- Identify the originating conversation (convo file or session context).
+- **Check for a convo file.** Look in `docs/active/<branch>/convos/` for this session's convo file.
+  - If it exists: use it as the originating conversation.
+  - If it doesn't exist: "We don't have a conversation summary for this session yet. Let me create one before the plan, so the plan can reference its reasoning." Run `{{skills_dir}}/update-docs/SKILL.md` first, then continue.
 - Create a plan that a senior engineer can follow, with full provenance.
 <system-reminder>Any absolute paths in your plan MUST take into account any worktrees that may have been created</system-reminder>
 - Think about edge cases. Add them to the plan.
