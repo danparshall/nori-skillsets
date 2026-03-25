@@ -83,6 +83,7 @@ Historical docs are **never deleted** — always recoverable when you need to re
 |-------|---------|
 | **update-docs** | The core operation. Checkpoints research progress mid-session: creates/updates convo summary, saves results with provenance links, updates RESEARCH_LOG.md and STATUS.md. Does NOT commit or push — the session continues. |
 | **finish-convo** | Thin wrapper: runs update-docs, then commits and pushes. This is the session boundary marker. |
+| **add-paper** | Full paper integration pipeline: download PDF, extract text to papers/text/, add one-liner to PAPER_INDEX.md, read the paper and write a full summary in PAPER_SUMMARIES.md. Ensures every paper is searchable and indexed. |
 | **audit-docs** | Checks docs/active/ for consistency: convos indexed in RESEARCH_LOG? Plans linked to convos? Results have provenance? Prompts the user for discrepancies — never auto-fixes (other sessions may be active). |
 | **clean-worktrees** | Safely consolidates accumulated worktrees with data preservation, merge safety checks, and research doc archiving. |
 
@@ -112,6 +113,10 @@ write-a-plan
 audit-docs (checks consistency)
   └── convos indexed? plans linked? results have provenance?
       → prompts user, never auto-fixes
+
+add-paper (integrates a new paper)
+  └── download PDF → extract text → add to PAPER_INDEX
+      → read paper → add to PAPER_SUMMARIES → stage
 
 audit-papers (checks completeness)
   └── PDFs have text? papers indexed? summaries accurate?
