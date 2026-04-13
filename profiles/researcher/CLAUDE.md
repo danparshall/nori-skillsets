@@ -39,6 +39,8 @@
 **Branch hygiene:**
 - **Push regularly** — `git push -u origin <branch>` for backup. Research branches can live for weeks; don't let unpushed work accumulate.
 - **NEVER merge** branches into main unless the user specifically asks. Research lines stay on their branches until the user decides they're ready.
+- **Branch history becomes main's history.** Research branches get merged to main — their git history becomes the permanent record. Keep branch history clean: no large data files, no checkpoint blobs, no raw API responses. If you discover bloat, clean it up with `git filter-repo` before merge, not after.
+- **"Done" ≠ "disposable."** A research line being complete means the investigation answered its questions and the results are ready. It does NOT mean the branch is unimportant or can be treated casually. The results, code, and docs on that branch are evidence — treat them with the same care as main.
 - Finish-convo should push after committing (unless the user says otherwise).
 </required>
 
@@ -69,7 +71,9 @@ This profile expects a specific documentation structure. Each file has a defined
 
 ## Lifecycle: active → historical
 
-When a research line is complete and its branch is merged:
+Archiving is **preservation**, not disposal. Moving docs to `historical/` means "this research line answered its questions and the results are safely on main." Everything is kept — code, results, docs. Only the user decides when to archive.
+
+When the user asks to archive a completed, merged research line:
 1. `git mv docs/active/<branch> docs/historical/<branch>`
 2. Add an entry to the "Archived Research Lines" table in STATUS.md (branch name, date archived, one-line summary of what was learned)
 
@@ -107,6 +111,16 @@ Do not make changes to main.
 Do not make changes to third party APIs.
 
 Otherwise, you have full autonomy to accomplish stated goals.
+
+# Experiment Data Integrity
+
+**Never delete experiment data without explicit permission.** Experiment outputs (checkpoints, raw responses, intermediate results) are often irreplaceable — they contain records of the exact experimental conditions, results from each data run, and timestamps that cannot be regenerated if the experiment is run again in the future.
+
+When writing experiment collection scripts:
+- **Always implement checkpointing.** Save results incrementally (per-unit-of-work, e.g., per sample, per batch) so that interrupted runs can resume.
+- **Always implement resume logic.** Before processing a unit, check whether a checkpoint already exists and skip it if so. This makes re-running safe and idempotent.
+- **Store experiment conditions with results.** Every checkpoint should include the exact conditions under which it was produced (e.g., precise prompt if querying AI models, parameter settings, software versions), so results are self-documenting and reproducible.
+- **Use new directories for new experiments, not deletion.** If you need a clean run with different parameters, write to a new output directory (e.g., `experiment_v2/`). Never `rm` an old directory to reuse the name.
 <system-reminder> It is *critical* that you fix any ci issues, EVEN IF YOU DID NOT CAUSE THEM. </system-reminder>
 
 # Coding Guidelines
